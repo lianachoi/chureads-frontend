@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React/*, { useState }*/ from 'react'
 /**사용자의 이름입력 -> 인사 문구와 함께 메시지 보여줌 */
 const Greeting = ({name = "??", onButtonClick}) => {
     // logic
