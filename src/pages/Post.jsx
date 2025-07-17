@@ -1,17 +1,35 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PostInput from "../components/PostInput";
+import { auth } from "../firebase";
 
 const Post = () => {
   // logic
   const history = useNavigate();
+    const currentUser = auth.currentUser;
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [churead, setChuread] = useState("");
 
   const handleChange = (value) => {
     setChuread(value);
   };
 
-  const handlePost = (event) => {
+  const createPost = async(postData) =>{    
+    try {
+      const response = await fetch(`${API_BASE_URL}/posts`,{
+        method: "POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body: JSON.stringify(postData)
+        });
+        return response;
+    } catch (error) {
+      console.error("게시글 추가 에러:", error);    
+    }
+  }
+
+  const handlePost = async(event) => {
     event.preventDefault(); // 폼 제출시 새로고침 방지 메소드
 
     // 1. 텍스트에서 불필요한 공백 제거하기
@@ -28,7 +46,18 @@ const Post = () => {
 
     // 빈 스트링이 아닌 경우
     // TODO: 백엔드에 Post 요청
-
+    try {
+      const newItem = {
+        userName : currentUser.displayName,
+        userId : currentUser.uid,
+        userProfileImage:currentUser.photoURL || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
+        content: resultChuread
+      };
+      const result = await createPost(newItem);
+      console.log("🚀 ~ handlePost ~ result:", result)
+    } catch (error) {
+      console.error("게시글 추가 에러:", error);      
+    }
     history("/"); // home화면으로 이동
   };
 
@@ -48,7 +77,8 @@ const Post = () => {
         <div className="h-full overflow-auto">
           <form id="post" onSubmit={handlePost}>
             {/* START: 사용자 입력 영역 */}
-            <PostInput onChange={handleChange} />
+            <PostInput userName={currentUser.displayName} 
+            userProfileImage={currentUser.photoURL || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} onChange={handleChange} />
             {/* END: 사용자 입력 영역 */}
             {/* START: 게시 버튼 영역 */}
             <div className="w-full max-w-[572px] flex items-center fixed bottom-0 lef p-6">
