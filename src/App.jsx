@@ -22,6 +22,7 @@ function App() {
   useEffect(()=>{
     init();
   },[])
+  
   // view
   return (
     <div className="bg-churead-black h-full text-white overflow-auto">

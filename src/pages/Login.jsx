@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputField from "../components/InputField";
 import LoginButton from "../components/LoginButton";
 import { Link, useNavigate } from "react-router-dom";
@@ -15,6 +15,10 @@ const [password, setPassword] = useState("");
 // 로딩 상태
 const [isLoading, setIsLoading] = useState(false);
 const [errorMessage, setErrorMessage] = useState("");
+
+const currentUser = auth.currentUser;
+
+const isLoggedIn = !!currentUser; //return true(logged in) or false
 
 const handleInputChange = (inputValue, field) => {
   if (field === "email") {
@@ -69,6 +73,15 @@ const handleLogin = async (event) => {
       
     }
   };
+
+  useEffect(() => {
+    // 페이지 진입시 딱 한번 실행
+    if (isLoggedIn) {
+      //login page로 redirect
+      history('/');
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   // view
   return (
