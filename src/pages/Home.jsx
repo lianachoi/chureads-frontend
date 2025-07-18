@@ -4,6 +4,7 @@ import Nav from "../components/layout/Nav";
 import FeedItem from "../components/FeedItem";
 import { useNavigate } from "react-router-dom";
 import { auth } from './../firebase';
+import useSSE from "../hooks/useSSE";
 
 const Home = () => {
   // logic
@@ -15,6 +16,9 @@ const Home = () => {
   console.log("🚀 ~ Home ~ currentUser:", currentUser)
 
   const [feedList, setFeedList] = useState([]);
+
+  //SSE연결
+  const {isConnected} = useSSE();
 
   const handleEdit = (data) => {
     history(`/edit/${data._id}`); // edit페이지로 이동
@@ -85,6 +89,7 @@ const Home = () => {
 
         <div>
           {/* START: 피드 영역 */}
+          <span className="block p-2 text-right text-sm">{isConnected?`✅연결성공` :`🛑연결실패`}</span>
           {!feedList.length ? 
           <p>No Data</p> :
           <ul>

@@ -26,7 +26,7 @@ const useSSE = () => {
       setIsConnected(true);
     };
 
-    // 메시지 수신
+    // 메시지 수신받을때마다 실행되는함수
     eventSource.onmessage = (event) => {
       try {
         // eventData 객체
