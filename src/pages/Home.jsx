@@ -24,11 +24,35 @@ const Home = () => {
     history(`/edit/${data._id}`); // edit페이지로 이동
   };
 
-  const handleDelete = (selectedItem) => {
-    const filterList = feedList.filter((item) => item.id !== selectedItem.id);
-    setFeedList(filterList);
+  const deletePost = async(id) =>{    
+    try {
+      const response = await fetch(`${API_BASE_URL}/posts/${id}`,{
+        method: "DELETE",
+        headers:{
+          "Content-Type":"application/json"
+        }
+        });
+        return response;
+    } catch (error) {
+      console.error("게시글 삭제 에러:", error);    
+    }
+  }
+
+
+  const handleDelete = async (selectedItem) => {
 
     // TODO: 백엔드에 Delete 요청
+     try {
+      const result = await deletePost(selectedItem._id);
+      console.log("🚀 ~ handleDelete ~ result:", result)
+      console.log("🚀 ~ handleDelete ~ selectedItem._id:", selectedItem._id)
+      // console.log("🚀 ~ handlePost ~ result:", result)
+      const filterList = feedList.filter((item) => item._id !== selectedItem._id);
+      setFeedList(filterList);
+     history("/"); // home화면으로 이동
+    } catch (error) {
+      console.error("게시글 추가 에러:", error);      
+    }
   };
 
   const handleLike = (selectedId) => {

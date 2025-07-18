@@ -10,12 +10,14 @@ const Post = () => {
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [churead, setChuread] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
   const handleChange = (value) => {
     setChuread(value);
   };
 
   const createPost = async(postData) =>{    
     try {
+      setIsLoading(true);
       const response = await fetch(`${API_BASE_URL}/posts`,{
         method: "POST",
         headers:{
@@ -26,6 +28,8 @@ const Post = () => {
         return response;
     } catch (error) {
       console.error("게시글 추가 에러:", error);    
+    } finally{
+      setIsLoading(false);
     }
   }
 
@@ -89,7 +93,7 @@ const Post = () => {
                 type="submit"
                 className="ml-auto px-5 py-2 bg-white text-churead-black rounded-3xl font-bold"
               >
-                게시
+                {isLoading? "Loading...":"게시"}
               </button>
             </div>
             {/* END: 게시 버튼 영역 */}
